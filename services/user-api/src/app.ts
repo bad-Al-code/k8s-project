@@ -1,9 +1,11 @@
 import express, { NextFunction, Request, Response } from "express";
 import winston from "winston";
 import client from "prom-client";
+import LokiTransport from "winston-loki";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
+const LOKI_HOST = process.env.LOKI_HOST || "http://localhost:3100";
 
 const logger = winston.createLogger({
   level: "info",
@@ -12,6 +14,13 @@ const logger = winston.createLogger({
   transports: [
     new winston.transports.Console({
       format: winston.format.simple(),
+    }),
+
+    new LokiTransport({
+      host: LOKI_HOST,
+      json: true,
+      format: winston.format.json(),
+      labels: { appName: "user-api" },
     }),
   ],
 });
@@ -42,7 +51,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.get("/", (req: Request, res: Response) => {
-  res.status(200).send("Hello");
+  logger.info("[user-api]: root endpoint accessed.");
+
+  res.status(200).send("Hello from User API");
 });
 
 app.get("/metrics", async (req: Request, res: Response) => {
@@ -52,4 +63,5 @@ app.get("/metrics", async (req: Request, res: Response) => {
 
 app.listen(PORT, () => {
   logger.info(`User API service listening in port ${PORT}`);
+  logger.info(`Loki host configurated to: ${LOKI_HOST}`);
 });
