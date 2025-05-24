@@ -38,13 +38,28 @@ const totalRequests = new client.Counter({
   registers: [register],
 });
 
+const requestDuration = new client.Histogram({
+  name: "product_catalog_request_duration_seconds",
+  help: "Histogram of request duration to the product-catalog service in seconds",
+  labelNames: ["method", "route", "status_code"],
+  buckets: [0.1, 0.5, 1, 2, 5, 10],
+  registers: [register],
+});
+
 app.use((req: Request, res: Response, next: NextFunction) => {
+  const end = requestDuration.startTimer();
+
   res.on("finish", () => {
-    totalRequests.inc({
+    end({
       method: req.method,
       route: req.path,
-      status_code: res.statusCode,
-    });
+      status_code: req.statusCode,
+    }),
+      totalRequests.inc({
+        method: req.method,
+        route: req.path,
+        status_code: res.statusCode,
+      });
   });
 
   next();
@@ -53,7 +68,28 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.get("/", (req: Request, res: Response) => {
   logger.info("[product-catalog]: root endpoint accessed.");
 
-  res.status(200).send("Hello from User API");
+  res.status(200).send("Hello from Product Catalog");
+});
+
+app.get("/slow", (req: Request, res: Response) => {
+  const delay = Math.floor(Math.random() * 2000) + 500; // 0.5 to 2.5
+  const shouldError = Math.random() < 0.5;
+
+  setTimeout(() => {
+    if (shouldError) {
+      logger.error(
+        `[product-catalog]: Simulated error occurred on /slow route!`,
+        { error: "INTERNAL_SERVER_ERROR", path: "/slow" }
+      );
+
+      res.status(500).send(`Simulated internal server error`);
+      return;
+    }
+
+    logger.info(`[product-catalog]: /slow route completed successfully.`);
+
+    res.send(`Successfully processed slow request after ${delay}ms`);
+  }, delay);
 });
 
 app.get("/metrics", async (req: Request, res: Response) => {
