@@ -44,8 +44,8 @@ spec:
           configMap:
             name: prometheus-config
         - name: prometheus-data-volume
-          configMap:
-            name: prometheus-data-pvc
+          persistentVolumeClaim:
+            claimName: prometheus-data-pvc
 
 ---
 apiVersion: v1
