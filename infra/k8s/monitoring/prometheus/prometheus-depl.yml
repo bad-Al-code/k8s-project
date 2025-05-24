@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-depl
+  namespace: monitoring
+  labels:
+    app: prometheus
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v3.3.0-rc.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus"
+            - "--web.enable-lifecycle"
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-config-volume
+              mountPath: /etc/prometheus
+            - name: prometheus-data-volume
+              mountPath: /prometheus
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      volumes:
+        - name: prometheus-config-volume
+          configMap:
+            name: prometheus-config
+        - name: prometheus-data-volume
+          configMap:
+            name: prometheus-data-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: monitoring
+  labels:
+    app: prometheus
+spec:
+  selector:
+    app: prometheus
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 9090
+      targetPort: 9090
