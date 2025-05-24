@@ -3,5 +3,6 @@ kind: Namespace
 metadata:
   name: monitoring
   labels:
+    name: monitoring-namesapce
     env: development
     app-type: observability
