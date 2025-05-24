@@ -16,7 +16,7 @@ spec:
       labels:
         app: prometheus
     spec:
-      serviceAccountName: default
+      serviceAccountName: prometheus-server
       containers:
         - name: prometheus
           image: prom/prometheus:v3.3.0-rc.0
