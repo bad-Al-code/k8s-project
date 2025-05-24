@@ -28,6 +28,9 @@ spec:
           env:
             - name: PORT
               value: "8000"
+            - name: LOKI_HOST
+              value: "http://loki.monitoring.svc.cluster.local:3100"
+
           resources:
             requests:
               memory: "64Mi"
