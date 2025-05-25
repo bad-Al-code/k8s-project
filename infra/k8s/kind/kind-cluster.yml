@@ -3,5 +3,9 @@ kind: Cluster
 name: observability-cluster
 nodes:
   - role: control-plane
+    extraPortMappings:
+      - containerPort: 30000
+        hostPort: 30000
+        protocol: TCP
   - role: worker
   - role: worker
