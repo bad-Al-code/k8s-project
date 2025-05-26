@@ -1,0 +1,60 @@
+apiVersion: skaffold/v4beta12
+kind: Config
+metadata:
+  name: k-s-project
+build:
+  artifacts:
+    - image: product-catalog
+      context: services/product-catalog
+      docker:
+        dockerfile: Dockerfile
+    - image: prom/node-exporter
+      context: services/user-api
+      docker:
+        dockerfile: Dockerfile
+  local:
+    useBuildkit: true
+    tryImportMissing: true
+
+manifests:
+  rawYaml:
+    - infra/k8s/application/namespace.yml
+    - infra/k8s/monitoring/namespace.yml
+
+    - infra/k8s/monitoring/kube-state-metrics/kube-state-metrics-rbac.yml
+    - infra/k8s/monitoring/prometheus/prometheus-rbac.yml
+    - infra/k8s/monitoring/node-exporter/node-exporter-rbac.yml
+    - infra/k8s/monitoring/promtail/promtail-rbac.yml
+
+    - infra/k8s/monitoring/grafana/grafana-pvc.yml
+    - infra/k8s/monitoring/loki/loki-pvc.yml
+    - infra/k8s/monitoring/prometheus/prometheus-pvc.yaml
+
+    - infra/k8s/monitoring/loki/loki-configmap.yml
+    - infra/k8s/monitoring/grafana/grafana-datasources-configmap.yml
+    - infra/k8s/monitoring/prometheus/prometheus-configmap.yml
+    - infra/k8s/monitoring/promtail/promtail-configmap.yml
+
+    - infra/k8s/monitoring/loki/loki-depl.yml
+    - infra/k8s/monitoring/prometheus/prometheus-depl.yml
+    - infra/k8s/monitoring/grafana/grafana-depl.yml
+    - infra/k8s/monitoring/kube-state-metrics/kube-state-metrics-depl.yml
+
+    - infra/k8s/monitoring/grafana/grafana-ingress.yml
+
+    - infra/k8s/monitoring/node-exporter/node-exporter-daemonset.yml
+    - infra/k8s/monitoring/promtail/promtail-daemonset.yml
+
+    - infra/k8s/application/user-api-depl.yml
+    - infra/k8s/application/product-catalog-depl.yml
+    - infra/k8s/application/product-catalog-hpa.yml
+
+    - infra/k8s/network-policies/network-policy-application.yml
+    - infra/k8s/network-policies/network-policy-monitoring.yml
+
+portForward:
+  - resourceType: Service
+    resourceName: grafana
+    namespace: monitoring
+    port: 3000
+    localPort: 3000
