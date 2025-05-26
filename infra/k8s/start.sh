@@ -11,9 +11,10 @@ kind load docker-image prom/node-exporter:v1.9.1 --name observability-cluster
 
 kubectl apply -f application
 kubectl apply -f monitoring
-kubectl apply -f monitoring/grafana 
+kubectl apply -f monitoring/grafana
 kubectl apply -f monitoring/kube-state-metrics
 kubectl apply -f monitoring/loki
 kubectl apply -f monitoring/node-exporter
 kubectl apply -f monitoring/prometheus
 kubectl apply -f monitoring/promtail
+kubectl apply -f monitoring/network-policies
