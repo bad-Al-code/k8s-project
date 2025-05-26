@@ -3,5 +3,4 @@ kind: Namespace
 metadata:
   name: application
   labels:
-    env: development
-    project: k8s-project
+    name: application-namespace
