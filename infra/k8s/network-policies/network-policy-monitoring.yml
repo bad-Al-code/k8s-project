@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-monitoring-traffic
+  namespace: monitoring
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector: {}
+        - namespaceSelector:
+            matchLabels:
+              name: application
+  egress:
+    - to:
+        - podSelector: {}
+        - namespaceSelector:
+            matchLabels:
+              name: application
+      ports:
+        - protocol: TCP
+          port: 8000 # App service port
+        - protocol: TCP
+          port: 3100 # Loki Port
+        - protocol: TCP
+          port: 9090 # Prometheus port
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
