@@ -18,7 +18,17 @@ data:
     scrape_configs:
       - job_name: kubernetes-pods-containers
         pipeline_stages:
-          - docker: {} # Parses Docker JSON logs
+          - json:
+              expressions:
+                level: level
+                message: message
+                service: service
+                appName: appName
+          # Then, extract parsed fields into Loki labels
+          - labels:
+              level:
+              service:
+              appName:
         kubernetes_sd_configs:
           - role: pod
         relabel_configs:
