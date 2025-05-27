@@ -8,7 +8,7 @@ build:
       context: services/product-catalog
       docker:
         dockerfile: Dockerfile
-    - image: prom/node-exporter
+    - image: user-api
       context: services/user-api
       docker:
         dockerfile: Dockerfile
