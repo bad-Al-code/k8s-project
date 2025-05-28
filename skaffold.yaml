@@ -2,19 +2,19 @@ apiVersion: skaffold/v4beta12
 kind: Config
 metadata:
   name: k-s-project
-build:
-  artifacts:
-    - image: product-catalog
-      context: services/product-catalog
-      docker:
-        dockerfile: Dockerfile
-    - image: user-api
-      context: services/user-api
-      docker:
-        dockerfile: Dockerfile
-  local:
-    useBuildkit: true
-    tryImportMissing: true
+# build:
+  # artifacts:
+  #   - image: product-catalog
+  #     context: services/product-catalog
+  #     docker:
+  #       dockerfile: Dockerfile
+  #   - image: user-api
+  #     context: services/user-api
+  #     docker:
+  #       dockerfile: Dockerfile
+  # local:
+  #   useBuildkit: true
+  #   tryImportMissing: true
 
 manifests:
   rawYaml:
