@@ -63,5 +63,5 @@ app.get("/metrics", async (req: Request, res: Response) => {
 
 app.listen(PORT, () => {
   logger.info(`User API service listening in port ${PORT}`);
-  logger.info(`Loki host configurated to: ${LOKI_HOST}`);
+  logger.info(`Loki host configurated to run at: ${LOKI_HOST}`);
 });
