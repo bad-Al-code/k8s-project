@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: product-catalog
-          image: product-catalog:1.0
+          image: badal1/product-catalog
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000

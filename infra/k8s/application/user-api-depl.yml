@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: user-api
-          image: user-api:1.0
+          image: badal1/user-api
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
