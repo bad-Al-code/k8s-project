@@ -3,18 +3,17 @@ kind: Config
 metadata:
   name: k-s-project
 # build:
-  # artifacts:
-  #   - image: product-catalog
-  #     context: services/product-catalog
-  #     docker:
-  #       dockerfile: Dockerfile
-  #   - image: user-api
-  #     context: services/user-api
-  #     docker:
-  #       dockerfile: Dockerfile
-  # local:
-  #   useBuildkit: true
-  #   tryImportMissing: true
+# artifacts:
+#   - image: product-catalog
+#     context: services/product-catalog
+#     docker:
+#       dockerfile: Dockerfile
+#   - image: user-api
+#     context: services/user-api
+#     docker:
+#       dockerfile: Dockerfile
+# local:
+#   useBuildkit: true
 
 manifests:
   rawYaml:
