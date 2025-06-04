@@ -1,23 +1,17 @@
 FROM node:lts-alpine3.21 AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+RUN corepack enable # Enable pnpm
 WORKDIR /app
-COPY . .
+COPY . /app 
 
-FROM base AS deps
-RUN pnpm install
+FROM base AS prod-deps
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
-FROM node:lts-alpine3.21 AS prod
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
-
-WORKDIR /app
-COPY . .
-COPY --from=deps /app/node_modules ./node_modules
+FROM base AS prod
+COPY --from=prod-deps /app/node_modules /app/node_modules
 
 ENV NODE_ENV=production
 ENV PORT=3000
 EXPOSE 3000
-CMD ["node", "src/index.js"]
+CMD ["node", "src/index.js"] 
