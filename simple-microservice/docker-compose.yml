@@ -1,5 +1,12 @@
 version: "3"
 services:
+  db:
+    image: mongo:5.0.29-focal
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    restart: always
+
   video-storage-svc:
     image: badal1/video-storage-svc
     build:
@@ -23,9 +30,12 @@ services:
       dockerfile: Dockerfile
     container_name: video-streaming-svc
     ports:
-      - "4001:80"
+      - "4001:4001"
     environment:
-      - PORT=80
+      - PORT=4001
+      - DBHOST=mongodb://mongo-db:27017
+      - DBNAME=video-streaming-svc
       - VIDEO_STORAGE_HOST=video-storage-svc
       - VIDEO_STORAGE_PORT=4000
+
     restart: "no"
