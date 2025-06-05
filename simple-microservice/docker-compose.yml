@@ -1,5 +1,18 @@
 version: "3"
 services:
+  history:
+    image: history
+    build:
+      context: ./history
+      dockerfile: Dockerfile
+    container_name: history
+    ports:
+      - "4002:4002"
+    environment:
+      - PORT=4002
+      - NODE_ENV=development
+    restart: "no"
+
   db:
     image: mongo:5.0.29-focal
     container_name: mongo-db
