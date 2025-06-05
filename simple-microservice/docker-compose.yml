@@ -7,9 +7,9 @@ services:
       dockerfile: Dockerfile
     container_name: video-storage-svc
     ports:
-      - "4000:3000"
+      - "4000:4000"
     environment:
-      - PORT=3000
+      - PORT=4000
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - S3_BUCKET_NAME=${S3_BUCKET_NAME}
@@ -27,5 +27,5 @@ services:
     environment:
       - PORT=80
       - VIDEO_STORAGE_HOST=video-storage-svc
-      - VIDEO_STORAGE_PORT=3000
+      - VIDEO_STORAGE_PORT=4000
     restart: "no"
