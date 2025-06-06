@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "video_storage_svc" {
-    bucket = "video-storage-svc-bucket-uco3p8exjlu"
+  bucket = "video-storage-svc-bucket-uco3p8exjlu"
 
   tags = {
     Name        = "video-streaming-svc"
